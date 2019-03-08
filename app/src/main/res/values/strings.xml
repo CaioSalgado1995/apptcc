@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">tccws</string>
+
+    <string name="descricao_entrada">Por favor faça o login para entrar no aplicativo</string>
+    <string name="campo_usuario">Usuário</string>
+    <string name="campo_senha">Senha</string>
+    <string name="botao_continuar">Continuar</string>
+
+</resources>
