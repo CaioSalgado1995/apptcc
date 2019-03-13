@@ -1,5 +1,6 @@
 package com.example.clsalgado.tccws.module;
 
+import com.example.clsalgado.tccws.service.EmpresaService;
 import com.example.clsalgado.tccws.service.LoginService;
 
 import dagger.Module;
@@ -18,5 +19,15 @@ public class TccModule {
                 .build();
 
         return retrofit.create(LoginService.class);
+    }
+
+    @Provides
+    public EmpresaService getEmpresaService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.0.12:8080/wsjpa/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(EmpresaService.class);
     }
 }

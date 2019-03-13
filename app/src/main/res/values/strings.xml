@@ -5,5 +5,6 @@
     <string name="campo_usuario">Usuário</string>
     <string name="campo_senha">Senha</string>
     <string name="botao_continuar">Continuar</string>
+    <string name="title_activity_empresa">EmpresaActivity</string>
 
 </resources>

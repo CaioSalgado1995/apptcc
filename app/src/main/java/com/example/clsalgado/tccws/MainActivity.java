@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 editUsuario.getText().toString(),
                 editSenha.getText().toString());
 
-        //executaChamadaWebService(u);
-        executaChamadaServidorBancoDeDados(u);
+        executaChamadaWebService(u);
+        //executaChamadaServidorBancoDeDados(u);
     }
 
     /**
@@ -60,9 +60,7 @@ public class MainActivity extends AppCompatActivity {
      * @param usuario objeto que contêm matrícula e senha
      */
     private void executaChamadaWebService(Usuario usuario) {
-        // TODO testar chamada ao webservice após injetar serviço com Dagger
         Call<ResponseBody> call = loginService.login(usuario);
-        // TODO testar chamada ao webservice após externalizar em classe callback
         call.enqueue(new CallbackLogin());
     }
 
