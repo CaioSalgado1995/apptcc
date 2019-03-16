@@ -1,5 +1,10 @@
 package com.example.clsalgado.tccws;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,17 +27,26 @@ import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.campo_usuario)
-    EditText editUsuario;
-
-    @BindView(R.id.campo_senha)
-    EditText editSenha;
-
-    @BindView(R.id.botao_continuar)
-    Button btnContinuar;
-
     @Inject
     LoginService loginService;
+
+    private int contadorIteracoes;
+
+    private static int MAX_CHAMADAS = 500;
+
+    private Usuario usuario;
+
+    // receiver para verificar mudança na bateria
+    private BroadcastReceiver bateriaReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int bateria = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            int maximo = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
+
+            Log.d("MainActivity", "Nível de bateria == " + bateria);
+            Log.d("MainActivity", "Nível máximo de bateria == " + maximo);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +55,18 @@ public class MainActivity extends AppCompatActivity {
 
         // responsável por injeter as dependências com Dagger
         ((TccApplication) getApplication()).getComponent().inject(this);
-        // responsável por fazer o bind das views com ButterKnife
-        ButterKnife.bind(this);
-    }
+        this.registerReceiver(this.bateriaReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
-    @OnClick(R.id.botao_continuar)
-    public void efetuarLogin() {
-        Usuario u = new Usuario(
-                editUsuario.getText().toString(),
-                editSenha.getText().toString());
+        // inicialize iteracoes
+        contadorIteracoes = 1;
 
-        executaChamadaWebService(u);
-        //executaChamadaServidorBancoDeDados(u);
+        // configurando usuário fixo
+        usuario = new Usuario("1505602", "789456123");
+
+        // transferindo chamada ao webservice ou banco de dados direto para o onCreate
+        executaChamadaWebService(usuario);
+        //executaChamadaServidorBancoDeDados(usuario);
+
     }
 
     /**
@@ -60,8 +74,18 @@ public class MainActivity extends AppCompatActivity {
      * @param usuario objeto que contêm matrícula e senha
      */
     private void executaChamadaWebService(Usuario usuario) {
+        Log.d("MainActivity","Contador de chamadas == " + contadorIteracoes);
         Call<ResponseBody> call = loginService.login(usuario);
-        call.enqueue(new CallbackLogin());
+        call.enqueue(new CallbackLogin(this));
+    }
+
+    public void trataRetornoChamadaWebService() {
+        if(contadorIteracoes <= MAX_CHAMADAS) {
+            contadorIteracoes++;
+            Log.d("MainActivity","Contador de chamadas == " + contadorIteracoes);
+            Call<ResponseBody> call = loginService.login(usuario);
+            call.enqueue(new CallbackLogin(this));
+        }
     }
 
     /**
@@ -69,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
      * @param usuario objeto usuário
      */
     private void executaChamadaServidorBancoDeDados(Usuario usuario) {
+        Log.d("MainActivity", "Contador de chamadas banco == " + contadorIteracoes);
         new LoginTask(this).execute(usuario);
     }
 
@@ -77,7 +102,11 @@ public class MainActivity extends AppCompatActivity {
      * @param usuario objeto usuário
      */
     public void trataRetornoChamadaServidorBancoDeDados(Usuario usuario) {
-        Log.i("LoginServiceAcessoBanco", usuario.getMatricula());
-        Log.i("LoginServiceAcessoBanco", usuario.getSenha());
+        if(contadorIteracoes <= MAX_CHAMADAS) {
+            contadorIteracoes++;
+            Log.d("MainActivity", "Contador de chamadas banco == " + contadorIteracoes);
+            new LoginTask(this).execute(usuario);
+        }
+
     }
 }

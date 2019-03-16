@@ -2,6 +2,8 @@ package com.example.clsalgado.tccws.callback;
 
 import android.util.Log;
 
+import com.example.clsalgado.tccws.MainActivity;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -12,13 +14,16 @@ import retrofit2.Response;
  */
 public class CallbackLogin implements Callback<ResponseBody> {
 
-    public CallbackLogin() {}
+    private MainActivity activity;
+
+    public CallbackLogin(MainActivity activity) {
+        this.activity = activity;
+    }
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         Log.i("CallbackWebServiceLogin", "Sucesso");
-        Log.i("CallbackWebServiceLogin", response.message());
-        Log.i("CallbackWebServiceLogin", String.valueOf(response.code()));
+        activity.trataRetornoChamadaWebService();
     }
 
     @Override
