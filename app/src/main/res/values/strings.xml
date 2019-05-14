@@ -7,4 +7,13 @@
     <string name="botao_continuar">Continuar</string>
     <string name="title_activity_empresa">EmpresaActivity</string>
 
+    <string name="titulo_webservice">Web Service</string>
+    <string name="titulo_acessodireto">Acesso direto a base de dados</string>
+
+    <string name="botao_100">100</string>
+    <string name="botao_500">500</string>
+    <string name="botao_1000">1000</string>
+
+    <string name="titulo_cenario">Cenário de teste, executa um select com condição where</string>
+
 </resources>

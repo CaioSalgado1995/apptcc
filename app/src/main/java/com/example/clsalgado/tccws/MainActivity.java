@@ -1,15 +1,10 @@
 package com.example.clsalgado.tccws;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.BatteryManager;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.clsalgado.tccws.app.TccApplication;
 import com.example.clsalgado.tccws.callback.CallbackLogin;
@@ -30,23 +25,29 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     LoginService loginService;
 
-    private int contadorIteracoes;
+    @BindView(R.id.botao_100)
+    Button btn100Ws;
 
-    private static int MAX_CHAMADAS = 500;
+    @BindView(R.id.botao_500)
+    Button btn500Ws;
+
+    @BindView(R.id.botao_1000)
+    Button btn1000Ws;
+
+    @BindView(R.id.botao_100_db)
+    Button btn100Db;
+
+    @BindView(R.id.botao_500_db)
+    Button btn500Db;
+
+    @BindView(R.id.botao_1000_db)
+    Button btn1000Db;
+
+    private int contadorIteracoes = 1;
+
+    private int maximoChamadas = 100;
 
     private Usuario usuario;
-
-    // receiver para verificar mudança na bateria
-    private BroadcastReceiver bateriaReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int bateria = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-            int maximo = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
-
-            Log.d("MainActivity", "Nível de bateria == " + bateria);
-            Log.d("MainActivity", "Nível máximo de bateria == " + maximo);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +56,54 @@ public class MainActivity extends AppCompatActivity {
 
         // responsável por injeter as dependências com Dagger
         ((TccApplication) getApplication()).getComponent().inject(this);
-        this.registerReceiver(this.bateriaReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
-        // inicialize iteracoes
-        contadorIteracoes = 1;
+        ButterKnife.bind(this);
 
         // configurando usuário fixo
         usuario = new Usuario("1505602", "789456123");
 
-        // transferindo chamada ao webservice ou banco de dados direto para o onCreate
-        executaChamadaWebService(usuario);
-        //executaChamadaServidorBancoDeDados(usuario);
+    }
 
+    @OnClick(R.id.botao_100)
+    public void efetuarChamadaWs100Requisicoes() {
+        contadorIteracoes = 1;
+        maximoChamadas = 100;
+        executaChamadaWebService(usuario);
+    }
+
+    @OnClick(R.id.botao_500)
+    public void efetuaChamadaWs500Requisicoes() {
+        contadorIteracoes = 1;
+        maximoChamadas = 500;
+        executaChamadaWebService(usuario);
+    }
+
+    @OnClick(R.id.botao_1000)
+    public void efetuaChamadaWs1000Requisicoes(){
+        contadorIteracoes = 1;
+        maximoChamadas = 1000;
+        executaChamadaWebService(usuario);
+    }
+
+    @OnClick(R.id.botao_100_db)
+    public void efetuarChamadaDb100Requisicoes() {
+        contadorIteracoes = 1;
+        maximoChamadas = 100;
+        executaChamadaServidorBancoDeDados(usuario);
+    }
+
+    @OnClick(R.id.botao_500_db)
+    public void efetuaChamadaDb500Requisicoes() {
+        contadorIteracoes = 1;
+        maximoChamadas = 500;
+        executaChamadaServidorBancoDeDados(usuario);
+    }
+
+    @OnClick(R.id.botao_1000_db)
+    public void efetuaChamadaDb1000Requisicoes(){
+        contadorIteracoes = 1;
+        maximoChamadas = 1000;
+        executaChamadaServidorBancoDeDados(usuario);
     }
 
     /**
@@ -80,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void trataRetornoChamadaWebService() {
-        if(contadorIteracoes <= MAX_CHAMADAS) {
+        if(contadorIteracoes <= maximoChamadas) {
             contadorIteracoes++;
             Log.d("MainActivity","Contador de chamadas == " + contadorIteracoes);
             Call<ResponseBody> call = loginService.login(usuario);
@@ -102,11 +139,10 @@ public class MainActivity extends AppCompatActivity {
      * @param usuario objeto usuário
      */
     public void trataRetornoChamadaServidorBancoDeDados(Usuario usuario) {
-        if(contadorIteracoes <= MAX_CHAMADAS) {
+        if(contadorIteracoes <= maximoChamadas) {
             contadorIteracoes++;
             Log.d("MainActivity", "Contador de chamadas banco == " + contadorIteracoes);
             new LoginTask(this).execute(usuario);
         }
-
     }
 }
