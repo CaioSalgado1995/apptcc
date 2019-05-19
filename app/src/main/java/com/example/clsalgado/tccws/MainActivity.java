@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.clsalgado.tccws.app.TccApplication;
 import com.example.clsalgado.tccws.callback.CallbackLogin;
@@ -111,7 +112,9 @@ public class MainActivity extends AppCompatActivity {
      * @param usuario objeto que contêm matrícula e senha
      */
     private void executaChamadaWebService(Usuario usuario) {
-        Log.d("MainActivity","Contador de chamadas == " + contadorIteracoes);
+        Toast.makeText(this, "Iniciando chamadas webservice", Toast.LENGTH_SHORT).show();
+        String tagLog = "WEBSERVICE" + maximoChamadas;
+        Log.i(tagLog, "Iniciando chamadas webservice " + contadorIteracoes + " DE " + maximoChamadas);
         Call<ResponseBody> call = loginService.login(usuario);
         call.enqueue(new CallbackLogin(this));
     }
@@ -119,9 +122,12 @@ public class MainActivity extends AppCompatActivity {
     public void trataRetornoChamadaWebService() {
         if(contadorIteracoes <= maximoChamadas) {
             contadorIteracoes++;
-            Log.d("MainActivity","Contador de chamadas == " + contadorIteracoes);
+            String tagLog = "WEBSERVICE" + maximoChamadas;
+            Log.i(tagLog, "Continuação chamadas webservice " + contadorIteracoes + " DE " + maximoChamadas);
             Call<ResponseBody> call = loginService.login(usuario);
             call.enqueue(new CallbackLogin(this));
+        }else {
+            Toast.makeText(this, "Finalizando chamadas webservice", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -130,7 +136,9 @@ public class MainActivity extends AppCompatActivity {
      * @param usuario objeto usuário
      */
     private void executaChamadaServidorBancoDeDados(Usuario usuario) {
-        Log.d("MainActivity", "Contador de chamadas banco == " + contadorIteracoes);
+        Toast.makeText(this, "Iniciando chamadas direta a base de dados", Toast.LENGTH_SHORT).show();
+        String tagLog = "DIRETODATABASE" + maximoChamadas;
+        Log.i(tagLog, "Iniciando chamadas direta ao banco de dados " + contadorIteracoes + " DE " + maximoChamadas);
         new LoginTask(this).execute(usuario);
     }
 
@@ -141,8 +149,11 @@ public class MainActivity extends AppCompatActivity {
     public void trataRetornoChamadaServidorBancoDeDados(Usuario usuario) {
         if(contadorIteracoes <= maximoChamadas) {
             contadorIteracoes++;
-            Log.d("MainActivity", "Contador de chamadas banco == " + contadorIteracoes);
+            String tagLog = "DIRETODATABASE" + maximoChamadas;
+            Log.i(tagLog, "Continuação chamadas direta ao banco de dados " + contadorIteracoes + " DE " + maximoChamadas);
             new LoginTask(this).execute(usuario);
+        }else {
+            Toast.makeText(this, "Finalizando chamadas direta a base de dados", Toast.LENGTH_SHORT).show();
         }
     }
 }

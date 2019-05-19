@@ -44,19 +44,16 @@ public class LoginTask extends AsyncTask<Usuario, Integer, Usuario> {
                 while(resultSet.next()) {
                     String matricula = resultSet.getString("matricula");
                     String senha = resultSet.getString("senha");
-                    Log.i("LoginTaskAcessoBanco", matricula);
-                    Log.i("LoginTaskAcessoBanco", senha);
+                    Log.i("DIRETODATABASE", matricula + " " + senha);
                     retorno.setMatricula(matricula);
                     retorno.setSenha(senha);
                 }
                 resultSet.close();
             }
-
             preparedStatement.close();
             connection.close();
-
         } catch (SQLException e) {
-            Log.e("LoginTaskAcessoBanco", e.getMessage());
+            Log.e("DIRETODATABASE-ERRO", e.getMessage());
         }
         return retorno;
     }

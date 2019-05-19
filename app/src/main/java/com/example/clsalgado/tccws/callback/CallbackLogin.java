@@ -22,13 +22,12 @@ public class CallbackLogin implements Callback<ResponseBody> {
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        Log.i("CallbackWebServiceLogin", "Sucesso");
+        Log.i("WEBSERVICE", "Sucesso");
         activity.trataRetornoChamadaWebService();
     }
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
-        Log.i("CallbackWebServiceLogin", "Erro");
-        Log.e("CallbackWebServiceLogin", t.getLocalizedMessage());
+        Log.e("WEBSERVICE-ERRO", t.getLocalizedMessage());
     }
 }
