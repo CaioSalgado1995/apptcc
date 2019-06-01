@@ -14,6 +14,7 @@
     <string name="botao_500">500</string>
     <string name="botao_1000">1000</string>
 
-    <string name="titulo_cenario">Cenário de teste, executa um select com condição where</string>
+    <string name="titulo_cenario">Cenário de teste de login, executa um select com condição where</string>
+    <string name="titulo_cenario_cadastro">Cenário de teste de cadastro, executa um insert</string>
 
 </resources>

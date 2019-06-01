@@ -1,7 +1,7 @@
 package com.example.clsalgado.tccws.module;
 
-import com.example.clsalgado.tccws.service.EmpresaService;
 import com.example.clsalgado.tccws.service.LoginService;
+import com.example.clsalgado.tccws.service.UsuarioService;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,21 +13,20 @@ public class TccModule {
 
     @Provides
     public LoginService getLoginService() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.12:8080/wsjpa/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = configuracaoRetrofit();
         return retrofit.create(LoginService.class);
     }
 
     @Provides
-    public EmpresaService getEmpresaService() {
-        Retrofit retrofit = new Retrofit.Builder()
+    public UsuarioService getUsuarioService() {
+        Retrofit retrofit = configuracaoRetrofit();
+        return retrofit.create(UsuarioService.class);
+    }
+
+    private Retrofit configuracaoRetrofit() {
+        return new Retrofit.Builder()
                 .baseUrl("http://192.168.0.12:8080/wsjpa/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        return retrofit.create(EmpresaService.class);
     }
 }

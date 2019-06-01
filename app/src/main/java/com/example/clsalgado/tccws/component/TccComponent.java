@@ -1,7 +1,7 @@
 package com.example.clsalgado.tccws.component;
 
-import com.example.clsalgado.tccws.EmpresaActivity;
 import com.example.clsalgado.tccws.MainActivity;
+import com.example.clsalgado.tccws.UsuarioActivity;
 import com.example.clsalgado.tccws.module.TccModule;
 
 import dagger.Component;
@@ -11,5 +11,5 @@ public interface TccComponent {
 
     void inject(MainActivity activity);
 
-    void inject(EmpresaActivity empresaActivity);
+    void inject(UsuarioActivity activity);
 }

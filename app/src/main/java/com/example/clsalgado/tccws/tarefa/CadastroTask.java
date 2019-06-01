@@ -4,24 +4,19 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.clsalgado.tccws.MainActivity;
+import com.example.clsalgado.tccws.UsuarioActivity;
 import com.example.clsalgado.tccws.modelo.Usuario;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Classe criada para executar chamada ao servidor de banco de dados
- * Necessário criação de uma AsyncTask pois não é permitido fazer esse tipo de acesso na thread atual da Activity
- */
-public class LoginTask extends AsyncTask<Usuario, Integer, Usuario> {
+public class CadastroTask extends AsyncTask<Usuario, Integer, Usuario> {
+    private UsuarioActivity activity;
 
-    private MainActivity mainActivity;
-
-    public LoginTask(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public CadastroTask(UsuarioActivity activity) {
+        this.activity = activity;
     }
 
     @Override
@@ -29,17 +24,17 @@ public class LoginTask extends AsyncTask<Usuario, Integer, Usuario> {
         Usuario retorno = new Usuario();
         try {
             Connection connection =
-                        DriverManager.getConnection("jdbc:mariadb://192.168.0.12:3306/utfpr_tcc_wsjpa", "root", "root");
+                    DriverManager.getConnection("jdbc:mariadb://192.168.0.12:3306/utfpr_tcc_wsjpa", "root", "root");
 
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("select * from usuario where matricula = ? and senha = ?");
-            preparedStatement.setInt(1, usuarios[0].getMatricula());
+                    connection.prepareStatement("insert into usuario values(?,?)");
             preparedStatement.setString(2, usuarios[0].getSenha());
+            preparedStatement.setInt(3, usuarios[0].getContador());
 
             boolean sucesso = preparedStatement.execute();
 
             if(!sucesso) {
-                Log.d("DIRETODATABASE", "Não tem resultado para essa consulta!");
+                Log.d("DIRETODATABASE", "Erro ao inserir usuário!");
             }
             preparedStatement.close();
             connection.close();
@@ -51,6 +46,6 @@ public class LoginTask extends AsyncTask<Usuario, Integer, Usuario> {
 
     @Override
     protected void onPostExecute(Usuario usuario) {
-        mainActivity.trataRetornoChamadaServidorBancoDeDados(usuario);
+        activity.trataRetornoChamadaServidorBancoDeDados(usuario, "CADASTRAR");
     }
 }

@@ -2,21 +2,28 @@ package com.example.clsalgado.tccws.modelo;
 
 public class Usuario {
 
-    private String matricula;
+    private int matricula;
     private String senha;
+    private int contador;
 
     public Usuario(){}
 
-    public Usuario(String matricula, String senha) {
+    public Usuario(int matricula, String senha) {
         this.matricula = matricula;
         this.senha = senha;
     }
 
-    public String getMatricula() {
+    public Usuario(int matricula, String senha, int contador) {
+        this.matricula = matricula;
+        this.senha = senha;
+        this.contador = contador;
+    }
+
+    public int getMatricula() {
         return matricula;
     }
 
-    public void setMatricula(String matricula) {
+    public void setMatricula(int matricula) {
         this.matricula = matricula;
     }
 
@@ -27,4 +34,8 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    public int getContador() { return contador; }
+
+    public void setContador(int contador) { this.contador = contador; }
 }
