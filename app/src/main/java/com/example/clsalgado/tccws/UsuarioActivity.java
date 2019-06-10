@@ -12,6 +12,7 @@ import com.example.clsalgado.tccws.callback.CallbackUsuario;
 import com.example.clsalgado.tccws.modelo.Usuario;
 import com.example.clsalgado.tccws.service.LoginService;
 import com.example.clsalgado.tccws.service.UsuarioService;
+import com.example.clsalgado.tccws.tarefa.AtualizarTask;
 import com.example.clsalgado.tccws.tarefa.CadastroTask;
 import com.example.clsalgado.tccws.tarefa.LoginTask;
 
@@ -55,7 +56,7 @@ public class UsuarioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_usuario);
 
         // responsável por injeter as dependências com Dagger
         ((TccApplication) getApplication()).getComponent().inject(this);
@@ -63,7 +64,7 @@ public class UsuarioActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         // configurando usuário fixo
-        usuario = new Usuario(1505602, "789456123");
+        usuario = new Usuario(1505602, "1985");
 
     }
 
@@ -116,17 +117,23 @@ public class UsuarioActivity extends AppCompatActivity {
     private void executaChamadaWebService(Usuario usuario) {
         Toast.makeText(this, "Iniciando chamadas webservice", Toast.LENGTH_SHORT).show();
         String tagLog = "WEBSERVICE" + maximoChamadas;
+        usuario.setContador(contadorIteracoes);
         Log.i(tagLog, "Iniciando chamadas webservice " + contadorIteracoes + " DE " + maximoChamadas);
-        Call<ResponseBody> call = usuarioService.cadastrar(usuario);
+        //Call<ResponseBody> call = usuarioService.cadastrar(usuario);
+        Call<ResponseBody> call = usuarioService.atualizar(usuario);
+
         call.enqueue(new CallbackUsuario(this));
     }
 
     public void trataRetornoChamadaWebService() {
         if(contadorIteracoes <= maximoChamadas) {
             contadorIteracoes++;
+            usuario.setContador(contadorIteracoes);
             String tagLog = "WEBSERVICE" + maximoChamadas;
             Log.i(tagLog, "Continuação chamadas webservice " + contadorIteracoes + " DE " + maximoChamadas);
-            Call<ResponseBody> call = usuarioService.cadastrar(usuario);
+            //Call<ResponseBody> call = usuarioService.cadastrar(usuario);
+            Call<ResponseBody> call = usuarioService.atualizar(usuario);
+
             call.enqueue(new CallbackUsuario(this));
         }else {
             Toast.makeText(this, "Finalizando chamadas webservice", Toast.LENGTH_SHORT).show();
@@ -139,9 +146,11 @@ public class UsuarioActivity extends AppCompatActivity {
      */
     private void executaChamadaServidorBancoDeDados(Usuario usuario) {
         Toast.makeText(this, "Iniciando chamadas direta a base de dados", Toast.LENGTH_SHORT).show();
+        usuario.setContador(contadorIteracoes);
         String tagLog = "DIRETODATABASE" + maximoChamadas;
         Log.i(tagLog, "Iniciando chamadas direta ao banco de dados " + contadorIteracoes + " DE " + maximoChamadas);
-        new CadastroTask(this).execute(usuario);
+        new AtualizarTask(this).execute(usuario);
+        //new CadastroTask(this).execute(usuario);
     }
 
     /**
@@ -152,15 +161,11 @@ public class UsuarioActivity extends AppCompatActivity {
         if(contadorIteracoes <= maximoChamadas) {
             usuario.setContador(contadorIteracoes);
 
-            // TODO testar para cenário de remoção
-            if(evento.equals("REMOVER")) {
-                usuario.setMatricula(contadorIteracoes);
-            }
-
             contadorIteracoes++;
             String tagLog = "DIRETODATABASE" + maximoChamadas;
             Log.i(tagLog, "Continuação chamadas direta ao banco de dados " + contadorIteracoes + " DE " + maximoChamadas);
-            new CadastroTask(this).execute(usuario);
+            //new CadastroTask(this).execute(usuario);
+            new AtualizarTask(this).execute(usuario);
         }else {
             Toast.makeText(this, "Finalizando chamadas direta a base de dados", Toast.LENGTH_SHORT).show();
         }

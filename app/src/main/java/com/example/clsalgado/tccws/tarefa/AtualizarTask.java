@@ -26,14 +26,15 @@ public class AtualizarTask extends AsyncTask<Usuario, Integer, Usuario> {
                     DriverManager.getConnection("jdbc:mariadb://192.168.0.12:3306/utfpr_tcc_wsjpa", "root", "root");
 
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("update usuario set contador = ? where matricula = ?");
+                    connection.prepareStatement("update usuario set contador = ?, senha = ? where matricula = ?");
             preparedStatement.setInt(1, usuarios[0].getContador());
-            preparedStatement.setInt(2, usuarios[0].getMatricula());
+            preparedStatement.setString(2, usuarios[0].getSenha());
+            preparedStatement.setInt(3, usuarios[0].getMatricula());
 
 
-            boolean sucesso = preparedStatement.execute();
+            int sucesso = preparedStatement.executeUpdate();
 
-            if(!sucesso) {
+            if(sucesso == 0) {
                 Log.d("DIRETODATABASE", "Erro ao atualizar usuário!");
             }
             preparedStatement.close();

@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="22dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/titulo_cenario_cadastro"
+        android:text="@string/titulo_cenario_atualizacao"
         android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/botao_1000"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -27,15 +27,17 @@ public class CadastroTask extends AsyncTask<Usuario, Integer, Usuario> {
                     DriverManager.getConnection("jdbc:mariadb://192.168.0.12:3306/utfpr_tcc_wsjpa", "root", "root");
 
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("insert into usuario values(?,?)");
+                    connection.prepareStatement("insert into usuario(contador, senha) values(?,?)");
+            preparedStatement.setInt(1, usuarios[0].getContador());
             preparedStatement.setString(2, usuarios[0].getSenha());
-            preparedStatement.setInt(3, usuarios[0].getContador());
 
-            boolean sucesso = preparedStatement.execute();
 
-            if(!sucesso) {
+            int sucesso = preparedStatement.executeUpdate();
+
+            if(sucesso == 0) {
                 Log.d("DIRETODATABASE", "Erro ao inserir usuário!");
             }
+
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {

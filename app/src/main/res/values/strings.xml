@@ -16,5 +16,6 @@
 
     <string name="titulo_cenario">Cenário de teste de login, executa um select com condição where</string>
     <string name="titulo_cenario_cadastro">Cenário de teste de cadastro, executa um insert</string>
+    <string name="titulo_cenario_atualizacao">Cenário de teste de atualização, executa um update</string>
 
 </resources>
